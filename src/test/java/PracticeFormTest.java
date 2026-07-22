@@ -1,8 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class PracticeFormTest extends TestBase {
@@ -51,22 +50,52 @@ public class PracticeFormTest extends TestBase {
             open("/automation-practice-form");
             $("#firstName").setValue("Roman");
             $("#lastName").setValue("Ivanov");
-          //  $("#userEmail").setValue("roman@ivi.ru");
             $("#gender-radio-2").click();
             $("#userNumber").setValue("8999655666");
             $("#submit").click();
 
             $(".modal-content").shouldBe(visible);
             $x("//tr[td[text()='Student Name']]/td[2]").shouldHave(text("Roman Ivanov"));
-           // $x("//tr[td[text()='Student Email']]/td[2]").shouldHave(text("roman@ivi.ru"));
             $x("//tr[td[text()='Gender']]/td[2]").shouldHave(text("Female"));
             $x("//tr[td[text()='Mobile']]/td[2]").shouldHave(text("8999655666"));
 
+    }
+
+        @Test
+        void negativeUserNumberTests() {
+            open("/automation-practice-form");
+            $("#firstName").setValue("Roman");
+            $("#lastName").setValue("Ivanov");
+            $("#gender-radio-2").click();
+            $("#userNumber").setValue("8999");
+            $("#submit").click();
+
+            $("#userForm").shouldHave(cssClass("was-validated"));
+
+    }
+         @Test
+         void negativeRequiredFieldsTests() {
+             open("/automation-practice-form");
+             $("#submit").click();
+
+             $("#userNumber").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+             $("#firstName").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+             $("#lastName").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+             $("#gender-radio-1").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+             $("#gender-radio-2").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+             $("#gender-radio-3").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
 
     }
 
+         @Test
+         void negativeUserEmailTests() {
+             open("/automation-practice-form");
+             $("#userEmail").setValue("roman@ivi");
+             $("#submit").click();
 
+             $("#userEmail").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
 
+    }
 
 
 }
